@@ -20,14 +20,16 @@ public class CounterService {
 
         Counter counter = Counter.getInstance();
 
-        int response;
+        int counterValue;
         if (!counter.exists(counterName)) {
-            response = Counter.NO_VALUE;
+            counterValue = Counter.NO_VALUE;
+            System.out.printf("A counter with such name:%s does not exist.\n", counterName);
         } else {
-            response = counter.getValue(counterName);
+            counterValue = counter.getValue(counterName);
+            System.out.printf("Counter name: %s; counter value: %d\n", counterName, counterValue);
         }
 
-        return Response.ok(String.valueOf(response)).build();
+        return Response.ok(String.valueOf(counterValue)).build();
     }
 
     @POST
@@ -37,6 +39,7 @@ public class CounterService {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
 
+        System.out.printf("Incrementing following counter's value by one: %s\n", counterName);
         Counter.getInstance().increment(counterName);
         return Response.ok("Successfully incremented").build();
     }
@@ -47,6 +50,7 @@ public class CounterService {
     public Response listAll() {
         Map<String, Integer> counterList = Counter.getInstance().listAll();
         JSONObject jsonObject = new JSONObject(counterList);
+        System.out.println("Listing all available counters..");
         return Response.ok(jsonObject.toJSONString()).build();
     }
 
